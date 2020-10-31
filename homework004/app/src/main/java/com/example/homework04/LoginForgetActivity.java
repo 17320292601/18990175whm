@@ -9,7 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import com.example.homework04.bean.UserInfo;
+import com.example.homework04.database.UserDBHelper;
+import com.example.homework04.Util.DateUtil;
 public class LoginForgetActivity extends AppCompatActivity implements View.OnClickListener{
 
     private EditText et_password_first; // 声明一个编辑框对象
@@ -17,6 +19,8 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
     private EditText et_verifycode; // 声明一个编辑框对象
     private String mVerifyCode; // 验证码
     private String mPhone; // 手机号码
+    private UserDBHelper mHelper;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +39,22 @@ public class LoginForgetActivity extends AppCompatActivity implements View.OnCli
         // 从前一个页面获取要修改密码的手机号码
         mPhone = getIntent().getStringExtra("phone");
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // 获得用户数据库帮助器的一个实例
+        mHelper = UserDBHelper.getInstance(this, 2);
+        // 恢复页面，则打开数据库连接
+        mHelper.openWriteLink();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // 暂停页面，则关闭数据库连接
+        mHelper.closeLink();
+    }
+
 
     @Override
     public void onClick(View v) {
